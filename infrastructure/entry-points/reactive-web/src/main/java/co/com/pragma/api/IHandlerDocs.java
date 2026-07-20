@@ -1,5 +1,7 @@
 package co.com.pragma.api;
 
+import co.com.pragma.api.dto.CapabilityTechnologyLinkInDto;
+import co.com.pragma.api.dto.CapabilityTechnologyLinkOutDto;
 import co.com.pragma.api.dto.TechnologyExistenceInDto;
 import co.com.pragma.api.dto.TechnologyExistenceOutDto;
 import co.com.pragma.api.dto.TechnologyInDto;
@@ -130,4 +132,70 @@ public interface IHandlerDocs {
                                     """)))
     })
     Mono<ServerResponse> listenCheckTechnologiesExistence(ServerRequest serverRequest);
+
+    @Operation(
+            operationId = "listenLinkCapabilityTechnologies",
+            summary = "Link technologies to a capability",
+            description = "Persists the relation between a capability and its technologies. All technology ids must exist.",
+            tags = { "Technologies" },
+            requestBody = @RequestBody(
+                    description = "Input data",
+                    required = true,
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CapabilityTechnologyLinkInDto.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "capabilityId": 10,
+                                      "technologyIds": [1, 2, 3]
+                                    }
+                                    """))))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Created",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CapabilityTechnologyLinkOutDto.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "capabilityId": 10,
+                                      "technologyIds": [1, 2, 3]
+                                    }
+                                    """))),
+            @ApiResponse(responseCode = "400", description = "Bad Request",
+                    content = @Content(mediaType = "application/json",
+                            examples = {
+                                    @ExampleObject(name = "Invalid input", value = """
+                                            {
+                                              "message": "Business validation failed",
+                                              "errors": [
+                                                {
+                                                  "field": "capabilityId",
+                                                  "message": "Capability id is required"
+                                                },
+                                                {
+                                                  "field": "technologyIds",
+                                                  "message": "Technology ids list is required and must not be empty"
+                                                }
+                                              ]
+                                            }
+                                            """),
+                                    @ExampleObject(name = "Technologies not found", value = """
+                                            {
+                                              "message": "Business validation failed",
+                                              "errors": [
+                                                {
+                                                  "field": "technologyIds",
+                                                  "message": "The following technology ids do not exist: [3]"
+                                                }
+                                              ]
+                                            }
+                                            """)
+                            })),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "message": "An unexpected error occurred. Please contact the administrator."
+                                    }
+                                    """)))
+    })
+    Mono<ServerResponse> listenLinkCapabilityTechnologies(ServerRequest serverRequest);
 }

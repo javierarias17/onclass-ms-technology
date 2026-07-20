@@ -8,4 +8,5 @@ public final class FunctionalMessageConstants {
 
     public static final String BUSINESS_VALIDATION_FAILED = "Business validation failed";
     public static final String TECHNOLOGY_ALREADY_EXISTS = "Technology name already exists";
+    public static final String TECHNOLOGIES_NOT_FOUND = "The following technology ids do not exist: %s";
 }

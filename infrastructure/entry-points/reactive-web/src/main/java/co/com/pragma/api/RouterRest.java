@@ -18,10 +18,13 @@ public class RouterRest {
                         @RouterOperation(path = "/api/v1/technologies", method = {
                                         RequestMethod.POST }, beanClass = Handler.class, beanMethod = "listenRegisterTechnology"),
                         @RouterOperation(path = "/api/v1/technologies/existence-check", method = {
-                                        RequestMethod.POST }, beanClass = Handler.class, beanMethod = "listenCheckTechnologiesExistence")
+                                        RequestMethod.POST }, beanClass = Handler.class, beanMethod = "listenCheckTechnologiesExistence"),
+                        @RouterOperation(path = "/api/v1/capability-technologies", method = {
+                                        RequestMethod.POST }, beanClass = Handler.class, beanMethod = "listenLinkCapabilityTechnologies")
         })
         public RouterFunction<ServerResponse> technologyRouterFunction(Handler handler) {
                 return route(POST("/api/v1/technologies"), handler::listenRegisterTechnology)
-                                .andRoute(POST("/api/v1/technologies/existence-check"), handler::listenCheckTechnologiesExistence);
+                                .andRoute(POST("/api/v1/technologies/existence-check"), handler::listenCheckTechnologiesExistence)
+                                .andRoute(POST("/api/v1/capability-technologies"), handler::listenLinkCapabilityTechnologies);
         }
 }

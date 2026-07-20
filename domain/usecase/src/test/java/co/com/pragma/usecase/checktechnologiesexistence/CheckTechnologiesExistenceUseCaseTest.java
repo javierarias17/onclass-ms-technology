@@ -20,6 +20,11 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class CheckTechnologiesExistenceUseCaseTest {
 
+    private static final Long TECHNOLOGY_ID_1 = 1L;
+    private static final Long TECHNOLOGY_ID_2 = 2L;
+    private static final Long TECHNOLOGY_ID_3 = 3L;
+    private static final Long MISSING_TECHNOLOGY_ID = 99L;
+
     @Mock
     private TechnologyRepository technologyRepository;
 
@@ -33,7 +38,7 @@ class CheckTechnologiesExistenceUseCaseTest {
     @Test
     void When_AllTechnologyIdsExist_Expect_EmptyMissingIdsList() {
         // Arrange
-        List<Long> technologyIds = List.of(1L, 2L, 3L);
+        List<Long> technologyIds = List.of(TECHNOLOGY_ID_1, TECHNOLOGY_ID_2, TECHNOLOGY_ID_3);
 
         when(technologyRepository.findMissingIds(technologyIds)).thenReturn(Mono.just(List.of()));
 
@@ -46,8 +51,8 @@ class CheckTechnologiesExistenceUseCaseTest {
     @Test
     void When_SomeTechnologyIdsDoNotExist_Expect_MissingIdsListToBeReturned() {
         // Arrange
-        List<Long> technologyIds = List.of(1L, 2L, 99L);
-        List<Long> missingIds = List.of(99L);
+        List<Long> technologyIds = List.of(TECHNOLOGY_ID_1, TECHNOLOGY_ID_2, MISSING_TECHNOLOGY_ID);
+        List<Long> missingIds = List.of(MISSING_TECHNOLOGY_ID);
 
         when(technologyRepository.findMissingIds(technologyIds)).thenReturn(Mono.just(missingIds));
 
