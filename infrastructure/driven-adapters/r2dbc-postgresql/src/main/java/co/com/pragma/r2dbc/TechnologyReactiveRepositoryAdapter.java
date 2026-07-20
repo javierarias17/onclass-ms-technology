@@ -9,6 +9,8 @@ import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @Repository
 public class TechnologyReactiveRepositoryAdapter extends ReactiveAdapterOperations<
         Technology,
@@ -33,5 +35,16 @@ public class TechnologyReactiveRepositoryAdapter extends ReactiveAdapterOperatio
     @Override
     public Mono<Boolean> existsByName(String name) {
         return repository.existsByName(name);
+    }
+
+    @Override
+    public Mono<List<Long>> findMissingIds(List<Long> technologyIds) {
+        return repository.findAllById(technologyIds)
+                .map(TechnologyEntity::getId)
+                .collectList()
+                .map(existingIds -> technologyIds.stream()
+                        .distinct()
+                        .filter(id -> !existingIds.contains(id))
+                        .toList());
     }
 }

@@ -1,5 +1,7 @@
 package co.com.pragma.api;
 
+import co.com.pragma.api.dto.TechnologyExistenceInDto;
+import co.com.pragma.api.dto.TechnologyExistenceOutDto;
 import co.com.pragma.api.dto.TechnologyInDto;
 import co.com.pragma.api.dto.TechnologyOutDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -81,4 +83,51 @@ public interface IHandlerDocs {
                                     """)))
     })
     Mono<ServerResponse> listenRegisterTechnology(ServerRequest serverRequest);
+
+    @Operation(
+            operationId = "listenCheckTechnologiesExistence",
+            summary = "Check technologies existence",
+            description = "Given a list of technology ids, returns the ids that do not exist. An empty list means all of them exist.",
+            tags = { "Technologies" },
+            requestBody = @RequestBody(
+                    description = "Input data",
+                    required = true,
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TechnologyExistenceInDto.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "technologyIds": [1, 2, 3]
+                                    }
+                                    """))))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TechnologyExistenceOutDto.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "missingIds": [3]
+                                    }
+                                    """))),
+            @ApiResponse(responseCode = "400", description = "Bad Request",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "message": "Business validation failed",
+                                      "errors": [
+                                        {
+                                          "field": "technologyIds",
+                                          "message": "Technology ids list is required and must not be empty"
+                                        }
+                                      ]
+                                    }
+                                    """))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "message": "An unexpected error occurred. Please contact the administrator."
+                                    }
+                                    """)))
+    })
+    Mono<ServerResponse> listenCheckTechnologiesExistence(ServerRequest serverRequest);
 }

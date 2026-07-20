@@ -1,5 +1,6 @@
 package co.com.pragma.model.common.validator;
 
+import java.util.Collection;
 import java.util.Map;
 
 public final class FieldValidator {
@@ -23,6 +24,12 @@ public final class FieldValidator {
     public static void validateMaxLength(String value, int maxLength, String field,
                                          String message, Map<String, String> errors) {
         if (value != null && value.length() > maxLength)
+            errors.put(field, message);
+    }
+
+    public static void validateNotEmpty(Collection<?> value, String field, String message,
+                                        Map<String, String> errors) {
+        if (value == null || value.isEmpty())
             errors.put(field, message);
     }
 }
