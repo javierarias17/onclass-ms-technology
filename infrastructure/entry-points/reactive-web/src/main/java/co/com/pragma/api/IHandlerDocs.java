@@ -1,6 +1,8 @@
 package co.com.pragma.api;
 
 import co.com.pragma.api.constants.PathVariableConstants;
+import co.com.pragma.api.dto.CapabilityTechnologiesLookupInDto;
+import co.com.pragma.api.dto.CapabilityTechnologiesLookupOutDto;
 import co.com.pragma.api.dto.CapabilityTechnologyLinkInDto;
 import co.com.pragma.api.dto.CapabilityTechnologyLinkOutDto;
 import co.com.pragma.api.dto.TechnologyExistenceInDto;
@@ -234,4 +236,59 @@ public interface IHandlerDocs {
                                     """)))
     })
     Mono<ServerResponse> listenDeleteCapabilityTechnologies(ServerRequest serverRequest);
+
+    @Operation(
+            operationId = "listenFindTechnologiesByCapabilityIds",
+            summary = "Find technologies by capability ids",
+            description = "Given a list of capability ids, returns the technologies (id and name only) linked to each one.",
+            tags = { "Technologies" },
+            requestBody = @RequestBody(
+                    description = "Input data",
+                    required = true,
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CapabilityTechnologiesLookupInDto.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "capabilityIds": [1, 2]
+                                    }
+                                    """))))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CapabilityTechnologiesLookupOutDto.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "capabilities": [
+                                        {
+                                          "capabilityId": 1,
+                                          "technologies": [
+                                            { "id": 10, "name": "Java" },
+                                            { "id": 11, "name": "Spring" }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                    """))),
+            @ApiResponse(responseCode = "400", description = "Bad Request",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "message": "Business validation failed",
+                                      "errors": [
+                                        {
+                                          "field": "capabilityIds",
+                                          "message": "Capability ids list is required and must not be empty"
+                                        }
+                                      ]
+                                    }
+                                    """))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "message": "An unexpected error occurred. Please contact the administrator."
+                                    }
+                                    """)))
+    })
+    Mono<ServerResponse> listenFindTechnologiesByCapabilityIds(ServerRequest serverRequest);
 }
