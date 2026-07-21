@@ -18,7 +18,7 @@ public class CheckTechnologiesExistenceUseCase {
     private final TechnologyRepository technologyRepository;
 
     public Mono<List<Long>> execute(List<Long> technologyIds) {
-        Map<String, String> errors = validate(technologyIds);
+        Map<String, String> errors = collectFieldFormatErrors(technologyIds);
 
         if (!errors.isEmpty())
             return Mono.error(new FieldsValidationException(errors));
@@ -26,7 +26,7 @@ public class CheckTechnologiesExistenceUseCase {
         return technologyRepository.findMissingIds(technologyIds);
     }
 
-    private Map<String, String> validate(List<Long> technologyIds) {
+    private Map<String, String> collectFieldFormatErrors(List<Long> technologyIds) {
         Map<String, String> errors = new LinkedHashMap<>();
         FieldValidator.validateNotEmpty(technologyIds, FieldConstants.TECHNOLOGY_IDS,
                 ValidationMessageConstants.MSG_TECHNOLOGY_IDS_REQUIRED, errors);

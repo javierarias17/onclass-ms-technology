@@ -1,5 +1,6 @@
 package co.com.pragma.api;
 
+import co.com.pragma.api.constants.PathVariableConstants;
 import co.com.pragma.api.dto.CapabilityTechnologyLinkInDto;
 import co.com.pragma.api.dto.CapabilityTechnologyLinkOutDto;
 import co.com.pragma.api.dto.TechnologyExistenceInDto;
@@ -7,6 +8,8 @@ import co.com.pragma.api.dto.TechnologyExistenceOutDto;
 import co.com.pragma.api.dto.TechnologyInDto;
 import co.com.pragma.api.dto.TechnologyOutDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -198,4 +201,37 @@ public interface IHandlerDocs {
                                     """)))
     })
     Mono<ServerResponse> listenLinkCapabilityTechnologies(ServerRequest serverRequest);
+
+    @Operation(
+            operationId = "listenDeleteCapabilityTechnologies",
+            summary = "Delete all technology links for a capability",
+            description = "Removes every capability-technology relation for the given capability id. "
+                    + "Used to clean up an incomplete previous registration attempt before retrying.",
+            tags = { "Technologies" },
+            parameters = @Parameter(name = PathVariableConstants.CAPABILITY_ID, in = ParameterIn.PATH, required = true,
+                    schema = @Schema(type = "integer", format = "int64")))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "No Content"),
+            @ApiResponse(responseCode = "400", description = "Bad Request",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "message": "Business validation failed",
+                                      "errors": [
+                                        {
+                                          "field": "capabilityId",
+                                          "message": "Capability id must be numeric"
+                                        }
+                                      ]
+                                    }
+                                    """))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "message": "An unexpected error occurred. Please contact the administrator."
+                                    }
+                                    """)))
+    })
+    Mono<ServerResponse> listenDeleteCapabilityTechnologies(ServerRequest serverRequest);
 }

@@ -5,6 +5,8 @@ import java.util.Map;
 
 public final class FieldValidator {
 
+    private static final String NUMERIC_FORMAT_REGEX = "\\d+";
+
     private FieldValidator() {
         throw new IllegalStateException("Utility class");
     }
@@ -30,6 +32,12 @@ public final class FieldValidator {
     public static void validateNotEmpty(Collection<?> value, String field, String message,
                                         Map<String, String> errors) {
         if (value == null || value.isEmpty())
+            errors.put(field, message);
+    }
+
+    public static void validateNumericFormat(String value, String field, String message,
+                                             Map<String, String> errors) {
+        if (value != null && !value.isBlank() && !value.matches(NUMERIC_FORMAT_REGEX))
             errors.put(field, message);
     }
 }

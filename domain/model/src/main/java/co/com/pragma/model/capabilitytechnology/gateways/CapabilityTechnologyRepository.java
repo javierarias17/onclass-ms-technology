@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface CapabilityTechnologyRepository {
     Mono<List<CapabilityTechnology>> saveAll(Long capabilityId, List<Long> technologyIds);
+
+    Mono<Void> deleteByCapabilityId(Long capabilityId);
 }

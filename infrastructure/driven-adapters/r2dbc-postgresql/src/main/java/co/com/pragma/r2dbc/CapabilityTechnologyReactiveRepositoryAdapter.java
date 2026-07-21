@@ -34,4 +34,9 @@ public class CapabilityTechnologyReactiveRepositoryAdapter extends
                                 .build()))
                 .collectList();
     }
+
+    @Override
+    public Mono<Void> deleteByCapabilityId(Long capabilityId) {
+        return repository.deleteByCapabilityId(capabilityId);
+    }
 }

@@ -17,4 +17,6 @@ public interface CapabilityTechnologyReactiveRepository extends
             + "RETURNING *")
     Mono<CapabilityTechnologyEntity> insertIgnoringConflict(@Param("capabilityId") Long capabilityId,
             @Param("technologyId") Long technologyId);
+
+    Mono<Void> deleteByCapabilityId(Long capabilityId);
 }

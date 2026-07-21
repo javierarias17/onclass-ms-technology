@@ -24,7 +24,7 @@ public class LinkCapabilityTechnologiesUseCase {
         private final CapabilityTechnologyRepository capabilityTechnologyRepository;
 
         public Mono<List<CapabilityTechnology>> execute(LinkCapabilityTechnologiesCommand command) {
-                Map<String, String> errors = validate(command);
+                Map<String, String> errors = collectFieldFormatErrors(command);
 
                 if (!errors.isEmpty())
                         return Mono.error(new FieldsValidationException(errors));
@@ -40,7 +40,7 @@ public class LinkCapabilityTechnologiesUseCase {
                                                                                                 missingIds)))));
         }
 
-        private Map<String, String> validate(LinkCapabilityTechnologiesCommand command) {
+        private Map<String, String> collectFieldFormatErrors(LinkCapabilityTechnologiesCommand command) {
                 Map<String, String> errors = new LinkedHashMap<>();
                 FieldValidator.validateNotNull(command.capabilityId(), FieldConstants.CAPABILITY_ID,
                                 ValidationMessageConstants.MSG_CAPABILITY_ID_REQUIRED, errors);
