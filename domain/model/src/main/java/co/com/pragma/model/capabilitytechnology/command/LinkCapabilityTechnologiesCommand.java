@@ -1,4 +1,4 @@
-package co.com.pragma.model.capabilitytechnology;
+package co.com.pragma.model.capabilitytechnology.command;
 
 import java.util.List;
 

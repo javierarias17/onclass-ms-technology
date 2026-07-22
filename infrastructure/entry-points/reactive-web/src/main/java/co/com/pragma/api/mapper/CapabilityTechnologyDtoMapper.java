@@ -3,7 +3,7 @@ package co.com.pragma.api.mapper;
 import co.com.pragma.api.dto.CapabilityTechnologyLinkInDto;
 import co.com.pragma.api.dto.CapabilityTechnologyLinkOutDto;
 import co.com.pragma.model.capabilitytechnology.CapabilityTechnology;
-import co.com.pragma.model.capabilitytechnology.LinkCapabilityTechnologiesCommand;
+import co.com.pragma.model.capabilitytechnology.command.LinkCapabilityTechnologiesCommand;
 import org.mapstruct.Mapper;
 
 import java.util.List;
@@ -11,9 +11,9 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface CapabilityTechnologyDtoMapper {
 
-    LinkCapabilityTechnologiesCommand toCommand(CapabilityTechnologyLinkInDto capabilityTechnologyLinkInDto);
+    LinkCapabilityTechnologiesCommand toLinkCapabilityTechnologiesCommand(CapabilityTechnologyLinkInDto capabilityTechnologyLinkInDto);
 
-    default CapabilityTechnologyLinkOutDto toResponse(List<CapabilityTechnology> capabilityTechnologies) {
+    default CapabilityTechnologyLinkOutDto toCapabilityTechnologyLinkOutDto(List<CapabilityTechnology> capabilityTechnologies) {
         if (capabilityTechnologies == null || capabilityTechnologies.isEmpty())
             return new CapabilityTechnologyLinkOutDto(null, List.of());
 

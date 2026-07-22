@@ -1,6 +1,6 @@
 package co.com.pragma.usecase.registertechnology;
 
-import co.com.pragma.model.technology.TechnologyCreateCommand;
+import co.com.pragma.model.technology.command.TechnologyCreateCommand;
 
 final class TechnologyCreateCommandFactory {
 

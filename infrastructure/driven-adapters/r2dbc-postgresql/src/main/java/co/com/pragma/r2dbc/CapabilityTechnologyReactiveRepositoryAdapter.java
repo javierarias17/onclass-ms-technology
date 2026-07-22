@@ -2,7 +2,7 @@ package co.com.pragma.r2dbc;
 
 import co.com.pragma.model.capabilitytechnology.CapabilityTechnology;
 import co.com.pragma.model.capabilitytechnology.gateways.CapabilityTechnologyRepository;
-import co.com.pragma.model.technology.TechnologySummary;
+import co.com.pragma.model.technology.query.TechnologySummary;
 import co.com.pragma.r2dbc.entity.CapabilityTechnologyEntity;
 import co.com.pragma.r2dbc.entity.CapabilityTechnologyNameProjection;
 import co.com.pragma.r2dbc.helper.ReactiveAdapterOperations;

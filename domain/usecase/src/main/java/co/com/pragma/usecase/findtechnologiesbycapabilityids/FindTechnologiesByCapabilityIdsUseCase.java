@@ -9,7 +9,7 @@ import co.com.pragma.model.common.FieldConstants;
 import co.com.pragma.model.common.ValidationMessageConstants;
 import co.com.pragma.model.common.validator.FieldValidator;
 import co.com.pragma.model.exceptions.FieldsValidationException;
-import co.com.pragma.model.technology.TechnologySummary;
+import co.com.pragma.model.technology.query.TechnologySummary;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 

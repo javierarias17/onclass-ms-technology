@@ -1,17 +1,17 @@
 package co.com.pragma.api;
 
 import co.com.pragma.api.constants.PathVariableConstants;
-import co.com.pragma.api.dto.CapabilityTechnologiesEntryOutDto;
-import co.com.pragma.api.dto.CapabilityTechnologiesLookupInDto;
-import co.com.pragma.api.dto.CapabilityTechnologiesLookupOutDto;
 import co.com.pragma.api.dto.CapabilityTechnologyLinkInDto;
+import co.com.pragma.api.dto.TechnologiesByCapabilityEntryOutDto;
+import co.com.pragma.api.dto.TechnologiesByCapabilityInDto;
+import co.com.pragma.api.dto.TechnologiesByCapabilityOutDto;
 import co.com.pragma.api.dto.TechnologyExistenceInDto;
 import co.com.pragma.api.dto.TechnologyExistenceOutDto;
 import co.com.pragma.api.dto.TechnologyInDto;
 import co.com.pragma.api.dto.TechnologySummaryOutDto;
 import co.com.pragma.api.mapper.CapabilityTechnologyDtoMapper;
 import co.com.pragma.api.mapper.TechnologyDtoMapper;
-import co.com.pragma.model.technology.TechnologySummary;
+import co.com.pragma.model.technology.query.TechnologySummary;
 import co.com.pragma.usecase.checktechnologiesexistence.CheckTechnologiesExistenceUseCase;
 import co.com.pragma.usecase.deletecapabilitytechnologies.DeleteCapabilityTechnologiesUseCase;
 import co.com.pragma.usecase.findtechnologiesbycapabilityids.FindTechnologiesByCapabilityIdsUseCase;
@@ -42,9 +42,9 @@ public class Handler implements IHandlerDocs {
     @Override
     public Mono<ServerResponse> listenRegisterTechnology(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(TechnologyInDto.class)
-                .map(technologyDtoMapper::toCommand)
+                .map(technologyDtoMapper::toTechnologyCreateCommand)
                 .flatMap(registerTechnologyUseCase::execute)
-                .map(technologyDtoMapper::toResponse)
+                .map(technologyDtoMapper::toTechnologyOutDto)
                 .flatMap(response -> ServerResponse.status(HttpStatus.CREATED).bodyValue(response));
     }
 
@@ -61,9 +61,9 @@ public class Handler implements IHandlerDocs {
     public Mono<ServerResponse> listenLinkCapabilityTechnologies(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(CapabilityTechnologyLinkInDto.class)
                 .defaultIfEmpty(new CapabilityTechnologyLinkInDto(null, null))
-                .map(capabilityTechnologyDtoMapper::toCommand)
+                .map(capabilityTechnologyDtoMapper::toLinkCapabilityTechnologiesCommand)
                 .flatMap(linkCapabilityTechnologiesUseCase::execute)
-                .map(capabilityTechnologyDtoMapper::toResponse)
+                .map(capabilityTechnologyDtoMapper::toCapabilityTechnologyLinkOutDto)
                 .flatMap(response -> ServerResponse.status(HttpStatus.CREATED).bodyValue(response));
     }
 
@@ -76,20 +76,20 @@ public class Handler implements IHandlerDocs {
 
     @Override
     public Mono<ServerResponse> listenFindTechnologiesByCapabilityIds(ServerRequest serverRequest) {
-        return serverRequest.bodyToMono(CapabilityTechnologiesLookupInDto.class)
-                .defaultIfEmpty(new CapabilityTechnologiesLookupInDto(null))
+        return serverRequest.bodyToMono(TechnologiesByCapabilityInDto.class)
+                .defaultIfEmpty(new TechnologiesByCapabilityInDto(null))
                 .flatMap(dto -> findTechnologiesByCapabilityIdsUseCase.execute(dto.capabilityIds()))
-                .map(this::toLookupResponse)
+                .map(this::toTechnologiesByCapabilityOutDto)
                 .flatMap(response -> ServerResponse.status(HttpStatus.OK).bodyValue(response));
     }
 
-    private CapabilityTechnologiesLookupOutDto toLookupResponse(Map<Long, List<TechnologySummary>> technologiesByCapability) {
-        List<CapabilityTechnologiesEntryOutDto> entries = technologiesByCapability.entrySet().stream()
-                .map(entry -> new CapabilityTechnologiesEntryOutDto(entry.getKey(),
+    private TechnologiesByCapabilityOutDto toTechnologiesByCapabilityOutDto(Map<Long, List<TechnologySummary>> technologiesByCapability) {
+        List<TechnologiesByCapabilityEntryOutDto> entries = technologiesByCapability.entrySet().stream()
+                .map(entry -> new TechnologiesByCapabilityEntryOutDto(entry.getKey(),
                         entry.getValue().stream()
                                 .map(technology -> new TechnologySummaryOutDto(technology.id(), technology.name()))
                                 .toList()))
                 .toList();
-        return new CapabilityTechnologiesLookupOutDto(entries);
+        return new TechnologiesByCapabilityOutDto(entries);
     }
 }

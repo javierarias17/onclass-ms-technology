@@ -5,7 +5,7 @@ import java.util.Map;
 import co.com.pragma.model.common.FieldConstants;
 import co.com.pragma.model.exceptions.constant.FunctionalMessageConstants;
 import co.com.pragma.model.technology.Technology;
-import co.com.pragma.model.technology.TechnologyCreateCommand;
+import co.com.pragma.model.technology.command.TechnologyCreateCommand;
 import co.com.pragma.model.technology.exceptions.TechnologyAlreadyExistsException;
 import co.com.pragma.model.technology.gateways.TechnologyRepository;
 import lombok.RequiredArgsConstructor;

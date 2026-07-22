@@ -1,7 +1,7 @@
 package co.com.pragma.usecase.linkcapabilitytechnologies;
 
 import co.com.pragma.model.capabilitytechnology.CapabilityTechnology;
-import co.com.pragma.model.capabilitytechnology.LinkCapabilityTechnologiesCommand;
+import co.com.pragma.model.capabilitytechnology.command.LinkCapabilityTechnologiesCommand;
 import co.com.pragma.model.capabilitytechnology.gateways.CapabilityTechnologyRepository;
 import co.com.pragma.model.exceptions.FieldsValidationException;
 import co.com.pragma.model.technology.exceptions.TechnologiesNotFoundException;

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import co.com.pragma.model.capabilitytechnology.CapabilityTechnology;
-import co.com.pragma.model.capabilitytechnology.LinkCapabilityTechnologiesCommand;
+import co.com.pragma.model.capabilitytechnology.command.LinkCapabilityTechnologiesCommand;
 import co.com.pragma.model.capabilitytechnology.gateways.CapabilityTechnologyRepository;
 import co.com.pragma.model.common.FieldConstants;
 import co.com.pragma.model.common.ValidationMessageConstants;

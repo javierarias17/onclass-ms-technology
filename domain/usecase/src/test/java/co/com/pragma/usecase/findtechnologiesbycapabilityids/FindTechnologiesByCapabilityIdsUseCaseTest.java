@@ -2,7 +2,7 @@ package co.com.pragma.usecase.findtechnologiesbycapabilityids;
 
 import co.com.pragma.model.capabilitytechnology.gateways.CapabilityTechnologyRepository;
 import co.com.pragma.model.exceptions.FieldsValidationException;
-import co.com.pragma.model.technology.TechnologySummary;
+import co.com.pragma.model.technology.query.TechnologySummary;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

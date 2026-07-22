@@ -1,10 +1,10 @@
 package co.com.pragma.api;
 
 import co.com.pragma.api.constants.PathVariableConstants;
-import co.com.pragma.api.dto.CapabilityTechnologiesLookupInDto;
-import co.com.pragma.api.dto.CapabilityTechnologiesLookupOutDto;
 import co.com.pragma.api.dto.CapabilityTechnologyLinkInDto;
 import co.com.pragma.api.dto.CapabilityTechnologyLinkOutDto;
+import co.com.pragma.api.dto.TechnologiesByCapabilityInDto;
+import co.com.pragma.api.dto.TechnologiesByCapabilityOutDto;
 import co.com.pragma.api.dto.TechnologyExistenceInDto;
 import co.com.pragma.api.dto.TechnologyExistenceOutDto;
 import co.com.pragma.api.dto.TechnologyInDto;
@@ -246,7 +246,7 @@ public interface IHandlerDocs {
                     description = "Input data",
                     required = true,
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CapabilityTechnologiesLookupInDto.class),
+                            schema = @Schema(implementation = TechnologiesByCapabilityInDto.class),
                             examples = @ExampleObject(value = """
                                     {
                                       "capabilityIds": [1, 2]
@@ -255,7 +255,7 @@ public interface IHandlerDocs {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CapabilityTechnologiesLookupOutDto.class),
+                            schema = @Schema(implementation = TechnologiesByCapabilityOutDto.class),
                             examples = @ExampleObject(value = """
                                     {
                                       "capabilities": [

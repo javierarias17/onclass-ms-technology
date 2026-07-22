@@ -1,7 +1,7 @@
 package co.com.pragma.model.capabilitytechnology.gateways;
 
 import co.com.pragma.model.capabilitytechnology.CapabilityTechnology;
-import co.com.pragma.model.technology.TechnologySummary;
+import co.com.pragma.model.technology.query.TechnologySummary;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
