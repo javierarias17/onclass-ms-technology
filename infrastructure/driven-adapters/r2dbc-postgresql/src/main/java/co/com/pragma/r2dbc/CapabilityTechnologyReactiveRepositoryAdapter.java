@@ -1,6 +1,7 @@
 package co.com.pragma.r2dbc;
 
 import co.com.pragma.model.capabilitytechnology.CapabilityTechnology;
+import co.com.pragma.model.capabilitytechnology.LinkCapabilityTechnologies;
 import co.com.pragma.model.capabilitytechnology.gateways.CapabilityTechnologyRepository;
 import co.com.pragma.model.common.FieldConstants;
 import co.com.pragma.model.exceptions.constant.FunctionalMessageConstants;
@@ -35,8 +36,9 @@ public class CapabilityTechnologyReactiveRepositoryAdapter extends
 
     @Override
     @Transactional
-    public Mono<List<CapabilityTechnology>> saveAll(Long capabilityId, List<Long> technologyIds) {
-        return Flux.fromIterable(technologyIds)
+    public Mono<List<CapabilityTechnology>> saveAll(LinkCapabilityTechnologies linkCapabilityTechnologies) {
+        Long capabilityId = linkCapabilityTechnologies.getCapabilityId().value();
+        return Flux.fromIterable(linkCapabilityTechnologies.getTechnologyIds().value())
                 .flatMap(technologyId -> repository.insertIgnoringConflict(capabilityId, technologyId)
                         .map(this::toEntity)
                         .defaultIfEmpty(CapabilityTechnology.builder()
