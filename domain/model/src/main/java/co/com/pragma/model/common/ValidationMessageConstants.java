@@ -11,6 +11,8 @@ public final class ValidationMessageConstants {
     public static final String MSG_DESCRIPTION_REQUIRED = "Technology description is required";
     public static final String MSG_DESCRIPTION_MAX_LENGTH = "Technology description must not exceed %d characters";
     public static final String MSG_TECHNOLOGY_IDS_REQUIRED = "Technology ids list is required and must not be empty";
+    public static final String MSG_TECHNOLOGY_IDS_SIZE_RANGE = "Capability must have between %d and %d technologies";
+    public static final String MSG_TECHNOLOGY_IDS_DUPLICATED = "Technology ids must not contain duplicates";
     public static final String MSG_CAPABILITY_ID_REQUIRED = "Capability id is required";
     public static final String MSG_CAPABILITY_ID_MUST_BE_NUMERIC = "Capability id must be numeric";
     public static final String MSG_CAPABILITY_IDS_REQUIRED = "Capability ids list is required and must not be empty";

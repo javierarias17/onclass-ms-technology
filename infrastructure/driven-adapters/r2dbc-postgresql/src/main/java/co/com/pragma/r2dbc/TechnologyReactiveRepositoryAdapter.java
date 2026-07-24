@@ -39,8 +39,7 @@ public class TechnologyReactiveRepositoryAdapter extends ReactiveAdapterOperatio
 
     @Override
     public Mono<List<Long>> findMissingIds(List<Long> technologyIds) {
-        return repository.findAllById(technologyIds)
-                .map(TechnologyEntity::getId)
+        return repository.findExistingIds(technologyIds)
                 .collectList()
                 .map(existingIds -> technologyIds.stream()
                         .distinct()

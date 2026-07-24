@@ -141,7 +141,7 @@ public interface IHandlerDocs {
     @Operation(
             operationId = "listenLinkCapabilityTechnologies",
             summary = "Link technologies to a capability",
-            description = "Persists the relation between a capability and its technologies. All technology ids must exist.",
+            description = "Persists the relation between a capability and its technologies. A capability must have between 3 and 20 technologies, all must exist and ids must not be duplicated.",
             tags = { "Technologies" },
             requestBody = @RequestBody(
                     description = "Input data",
@@ -177,7 +177,7 @@ public interface IHandlerDocs {
                                                 },
                                                 {
                                                   "field": "technologyIds",
-                                                  "message": "Technology ids list is required and must not be empty"
+                                                  "message": "Capability must have between 3 and 20 technologies"
                                                 }
                                               ]
                                             }
@@ -189,6 +189,17 @@ public interface IHandlerDocs {
                                                 {
                                                   "field": "technologyIds",
                                                   "message": "The following technology ids do not exist: [3]"
+                                                }
+                                              ]
+                                            }
+                                            """),
+                                    @ExampleObject(name = "Duplicated technology ids", value = """
+                                            {
+                                              "message": "Business validation failed",
+                                              "errors": [
+                                                {
+                                                  "field": "technologyIds",
+                                                  "message": "Technology ids must not contain duplicates"
                                                 }
                                               ]
                                             }
