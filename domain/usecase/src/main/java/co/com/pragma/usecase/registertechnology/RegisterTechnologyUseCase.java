@@ -14,23 +14,23 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class RegisterTechnologyUseCase {
 
-        private final TechnologyRepository technologyRepository;
+    private final TechnologyRepository technologyRepository;
 
-        public Mono<Technology> execute(TechnologyCreateCommand command) {
-                return Mono.just(command)
-                                .map(cmd -> Technology.builder()
-                                                .name(cmd.name())
-                                                .description(cmd.description())
-                                                .build())
-                                .flatMap(technology -> technologyRepository.existsByName(technology.getName().value())
-                                                .flatMap(exists -> {
-                                                        boolean nameExists = exists;
-                                                        return nameExists
-                                                                        ? Mono.error(new TechnologyAlreadyExistsException(
-                                                                                        FunctionalMessageConstants.BUSINESS_VALIDATION_FAILED,
-                                                                                        Map.of(FieldConstants.NAME,
-                                                                                                        FunctionalMessageConstants.TECHNOLOGY_ALREADY_EXISTS)))
-                                                                        : technologyRepository.save(technology);
-                                                }));
-        }
+    public Mono<Technology> execute(TechnologyCreateCommand command) {
+        return Mono.just(command)
+                .map(cmd -> Technology.builder()
+                        .name(cmd.name())
+                        .description(cmd.description())
+                        .build())
+                .flatMap(technology -> technologyRepository.existsByName(technology.getName().value())
+                        .flatMap(exists -> {
+                            boolean nameExists = exists;
+                            return nameExists
+                                    ? Mono.error(new TechnologyAlreadyExistsException(
+                                            FunctionalMessageConstants.BUSINESS_VALIDATION_FAILED,
+                                            Map.of(FieldConstants.NAME,
+                                                    FunctionalMessageConstants.TECHNOLOGY_ALREADY_EXISTS)))
+                                    : technologyRepository.save(technology);
+                        }));
+    }
 }

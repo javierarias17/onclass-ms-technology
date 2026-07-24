@@ -42,6 +42,7 @@ public class Handler implements IHandlerDocs {
     @Override
     public Mono<ServerResponse> listenRegisterTechnology(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(TechnologyInDto.class)
+                .defaultIfEmpty(new TechnologyInDto(null, null))
                 .map(technologyDtoMapper::toTechnologyCreateCommand)
                 .flatMap(registerTechnologyUseCase::execute)
                 .map(technologyDtoMapper::toTechnologyOutDto)
