@@ -2,16 +2,12 @@ package co.com.pragma.api;
 
 import co.com.pragma.api.constants.PathVariableConstants;
 import co.com.pragma.api.dto.CapabilityTechnologyLinkInDto;
-import co.com.pragma.api.dto.TechnologiesByCapabilityEntryOutDto;
 import co.com.pragma.api.dto.TechnologiesByCapabilityInDto;
-import co.com.pragma.api.dto.TechnologiesByCapabilityOutDto;
 import co.com.pragma.api.dto.TechnologyExistenceInDto;
 import co.com.pragma.api.dto.TechnologyExistenceOutDto;
 import co.com.pragma.api.dto.TechnologyInDto;
-import co.com.pragma.api.dto.TechnologySummaryOutDto;
 import co.com.pragma.api.mapper.CapabilityTechnologyDtoMapper;
 import co.com.pragma.api.mapper.TechnologyDtoMapper;
-import co.com.pragma.model.technology.query.TechnologySummary;
 import co.com.pragma.usecase.checktechnologiesexistence.CheckTechnologiesExistenceUseCase;
 import co.com.pragma.usecase.deletecapabilitytechnologies.DeleteCapabilityTechnologiesUseCase;
 import co.com.pragma.usecase.findtechnologiesbycapabilityids.FindTechnologiesByCapabilityIdsUseCase;
@@ -23,9 +19,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
-import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -80,17 +73,7 @@ public class Handler implements IHandlerDocs {
         return serverRequest.bodyToMono(TechnologiesByCapabilityInDto.class)
                 .defaultIfEmpty(new TechnologiesByCapabilityInDto(null))
                 .flatMap(dto -> findTechnologiesByCapabilityIdsUseCase.execute(dto.capabilityIds()))
-                .map(this::toTechnologiesByCapabilityOutDto)
+                .map(capabilityTechnologyDtoMapper::toTechnologiesByCapabilityOutDto)
                 .flatMap(response -> ServerResponse.status(HttpStatus.OK).bodyValue(response));
-    }
-
-    private TechnologiesByCapabilityOutDto toTechnologiesByCapabilityOutDto(Map<Long, List<TechnologySummary>> technologiesByCapability) {
-        List<TechnologiesByCapabilityEntryOutDto> entries = technologiesByCapability.entrySet().stream()
-                .map(entry -> new TechnologiesByCapabilityEntryOutDto(entry.getKey(),
-                        entry.getValue().stream()
-                                .map(technology -> new TechnologySummaryOutDto(technology.id(), technology.name()))
-                                .toList()))
-                .toList();
-        return new TechnologiesByCapabilityOutDto(entries);
     }
 }
