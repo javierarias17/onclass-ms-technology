@@ -26,13 +26,16 @@ public class RouterRest {
                         @RouterOperation(path = "/api/v1/capability-technologies/{" + PathVariableConstants.CAPABILITY_ID + "}", method = {
                                         RequestMethod.DELETE }, beanClass = Handler.class, beanMethod = "listenDeleteCapabilityTechnologies"),
                         @RouterOperation(path = "/api/v1/capability-technologies/by-capability-ids", method = {
-                                        RequestMethod.POST }, beanClass = Handler.class, beanMethod = "listenFindTechnologiesByCapabilityIds")
+                                        RequestMethod.POST }, beanClass = Handler.class, beanMethod = "listenFindTechnologiesByCapabilityIds"),
+                        @RouterOperation(path = "/api/v1/capability-technologies/cascade-delete", method = {
+                                        RequestMethod.POST }, beanClass = Handler.class, beanMethod = "listenDeleteOrphanedTechnologiesForCapabilities")
         })
         public RouterFunction<ServerResponse> technologyRouterFunction(Handler handler) {
                 return route(POST("/api/v1/technologies"), handler::listenRegisterTechnology)
                                 .andRoute(POST("/api/v1/technologies/existence-check"), handler::listenCheckTechnologiesExistence)
                                 .andRoute(POST("/api/v1/capability-technologies"), handler::listenLinkCapabilityTechnologies)
                                 .andRoute(DELETE("/api/v1/capability-technologies/{" + PathVariableConstants.CAPABILITY_ID + "}"), handler::listenDeleteCapabilityTechnologies)
-                                .andRoute(POST("/api/v1/capability-technologies/by-capability-ids"), handler::listenFindTechnologiesByCapabilityIds);
+                                .andRoute(POST("/api/v1/capability-technologies/by-capability-ids"), handler::listenFindTechnologiesByCapabilityIds)
+                                .andRoute(POST("/api/v1/capability-technologies/cascade-delete"), handler::listenDeleteOrphanedTechnologiesForCapabilities);
         }
 }
