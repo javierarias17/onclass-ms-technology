@@ -18,4 +18,9 @@ public interface TechnologyReactiveRepository extends
 
     @Query("SELECT id FROM technologies WHERE id IN (:technologyIds)")
     Flux<Long> findExistingIds(@Param("technologyIds") List<Long> technologyIds);
+
+    @Query("DELETE FROM technologies WHERE id IN (:candidateIds) "
+            + "AND id NOT IN (SELECT technology_id FROM capability_technologies WHERE technology_id IN (:candidateIds)) "
+            + "RETURNING id")
+    Flux<Long> deleteOrphaned(@Param("candidateIds") List<Long> candidateIds);
 }

@@ -24,6 +24,12 @@ public interface CapabilityTechnologyReactiveRepository extends
 
     Mono<Void> deleteByCapabilityId(Long capabilityId);
 
+    @Query("SELECT DISTINCT technology_id FROM capability_technologies WHERE capability_id IN (:capabilityIds)")
+    Flux<Long> findTechnologyIdsByCapabilityIds(@Param("capabilityIds") List<Long> capabilityIds);
+
+    @Query("DELETE FROM capability_technologies WHERE capability_id IN (:capabilityIds)")
+    Mono<Void> deleteByCapabilityIdIn(@Param("capabilityIds") List<Long> capabilityIds);
+
     @Query("SELECT ct.capability_id AS capability_id, t.id AS technology_id, t.name AS technology_name "
             + "FROM capability_technologies ct "
             + "JOIN technologies t ON t.id = ct.technology_id "

@@ -2,6 +2,7 @@ package co.com.pragma.api;
 
 import co.com.pragma.api.constants.PathVariableConstants;
 import co.com.pragma.api.dto.CapabilityTechnologyLinkInDto;
+import co.com.pragma.api.dto.CascadeDeleteTechnologiesInDto;
 import co.com.pragma.api.dto.TechnologiesByCapabilityInDto;
 import co.com.pragma.api.dto.TechnologyExistenceInDto;
 import co.com.pragma.api.dto.TechnologyExistenceOutDto;
@@ -10,6 +11,7 @@ import co.com.pragma.api.mapper.CapabilityTechnologyDtoMapper;
 import co.com.pragma.api.mapper.TechnologyDtoMapper;
 import co.com.pragma.usecase.checktechnologiesexistence.CheckTechnologiesExistenceUseCase;
 import co.com.pragma.usecase.deletecapabilitytechnologies.DeleteCapabilityTechnologiesUseCase;
+import co.com.pragma.usecase.deleteorphanedtechnologiesforcapabilities.DeleteOrphanedTechnologiesForCapabilitiesUseCase;
 import co.com.pragma.usecase.findtechnologiesbycapabilityids.FindTechnologiesByCapabilityIdsUseCase;
 import co.com.pragma.usecase.linkcapabilitytechnologies.LinkCapabilityTechnologiesUseCase;
 import co.com.pragma.usecase.registertechnology.RegisterTechnologyUseCase;
@@ -29,6 +31,7 @@ public class Handler implements IHandlerDocs {
     private final LinkCapabilityTechnologiesUseCase linkCapabilityTechnologiesUseCase;
     private final DeleteCapabilityTechnologiesUseCase deleteCapabilityTechnologiesUseCase;
     private final FindTechnologiesByCapabilityIdsUseCase findTechnologiesByCapabilityIdsUseCase;
+    private final DeleteOrphanedTechnologiesForCapabilitiesUseCase deleteOrphanedTechnologiesForCapabilitiesUseCase;
     private final TechnologyDtoMapper technologyDtoMapper;
     private final CapabilityTechnologyDtoMapper capabilityTechnologyDtoMapper;
 
@@ -75,5 +78,13 @@ public class Handler implements IHandlerDocs {
                 .flatMap(dto -> findTechnologiesByCapabilityIdsUseCase.execute(dto.capabilityIds()))
                 .map(capabilityTechnologyDtoMapper::toTechnologiesByCapabilityOutDto)
                 .flatMap(response -> ServerResponse.status(HttpStatus.OK).bodyValue(response));
+    }
+
+    @Override
+    public Mono<ServerResponse> listenDeleteOrphanedTechnologiesForCapabilities(ServerRequest serverRequest) {
+        return serverRequest.bodyToMono(CascadeDeleteTechnologiesInDto.class)
+                .defaultIfEmpty(new CascadeDeleteTechnologiesInDto(null))
+                .flatMap(dto -> deleteOrphanedTechnologiesForCapabilitiesUseCase.execute(dto.capabilityIds()))
+                .then(ServerResponse.noContent().build());
     }
 }

@@ -3,6 +3,7 @@ package co.com.pragma.api;
 import co.com.pragma.api.constants.PathVariableConstants;
 import co.com.pragma.api.dto.CapabilityTechnologyLinkInDto;
 import co.com.pragma.api.dto.CapabilityTechnologyLinkOutDto;
+import co.com.pragma.api.dto.CascadeDeleteTechnologiesInDto;
 import co.com.pragma.api.dto.TechnologiesByCapabilityInDto;
 import co.com.pragma.api.dto.TechnologiesByCapabilityOutDto;
 import co.com.pragma.api.dto.TechnologyExistenceInDto;
@@ -302,4 +303,47 @@ public interface IHandlerDocs {
                                     """)))
     })
     Mono<ServerResponse> listenFindTechnologiesByCapabilityIds(ServerRequest serverRequest);
+
+    @Operation(
+            operationId = "listenDeleteOrphanedTechnologiesForCapabilities",
+            summary = "Delete technologies orphaned by a set of capabilities",
+            description = "Given a list of capability ids that are about to be deleted, removes their "
+                    + "capability-technology links and deletes any technology that is left without any "
+                    + "other capability referencing it. Used by the bootcamp deletion cascade (HU-06). "
+                    + "Idempotent: calling it again with capabilities/technologies already removed is a no-op.",
+            tags = { "Technologies" },
+            requestBody = @RequestBody(
+                    description = "Input data",
+                    required = true,
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CascadeDeleteTechnologiesInDto.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "capabilityIds": [10]
+                                    }
+                                    """))))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "No Content"),
+            @ApiResponse(responseCode = "400", description = "Bad Request",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "message": "Business validation failed",
+                                      "errors": [
+                                        {
+                                          "field": "capabilityIds",
+                                          "message": "Capability ids list is required and must not be empty"
+                                        }
+                                      ]
+                                    }
+                                    """))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "message": "An unexpected error occurred. Please contact the administrator."
+                                    }
+                                    """)))
+    })
+    Mono<ServerResponse> listenDeleteOrphanedTechnologiesForCapabilities(ServerRequest serverRequest);
 }
