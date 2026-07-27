@@ -1,8 +1,8 @@
 package co.com.pragma.api;
 
 import co.com.pragma.api.constants.PathVariableConstants;
-import co.com.pragma.api.dto.CapabilityTechnologyLinkInDto;<<<<<<<HEAD
-import co.com.pragma.api.dto.CascadeDeleteTechnologiesInDto;=======>>>>>>>5 abe428(Se refactoriza el mapeo de la respuesta de tecnologías por capacidad hacia CapabilityTechnologyDtoMapper)
+import co.com.pragma.api.dto.CapabilityTechnologyLinkInDto;
+import co.com.pragma.api.dto.CascadeDeleteTechnologiesInDto;
 import co.com.pragma.api.dto.TechnologiesByCapabilityInDto;
 import co.com.pragma.api.dto.TechnologyExistenceInDto;
 import co.com.pragma.api.dto.TechnologyExistenceOutDto;

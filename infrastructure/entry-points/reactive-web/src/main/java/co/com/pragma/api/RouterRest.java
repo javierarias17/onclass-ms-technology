@@ -23,6 +23,8 @@ public class RouterRest {
                         + "/{" + PathVariableConstants.CAPABILITY_ID + "}";
         private static final String CAPABILITY_TECHNOLOGIES_BY_CAPABILITY_IDS_PATH = CAPABILITY_TECHNOLOGIES_PATH
                         + "/by-capability-ids";
+        private static final String CAPABILITY_TECHNOLOGIES_CASCADE_DELETE_PATH = CAPABILITY_TECHNOLOGIES_PATH
+                        + "/cascade-delete";
 
         @Bean
         @RouterOperations({
@@ -35,7 +37,9 @@ public class RouterRest {
                         @RouterOperation(path = CAPABILITY_TECHNOLOGIES_BY_ID_PATH, method = {
                                         RequestMethod.DELETE }, beanClass = Handler.class, beanMethod = "listenDeleteCapabilityTechnologies"),
                         @RouterOperation(path = CAPABILITY_TECHNOLOGIES_BY_CAPABILITY_IDS_PATH, method = {
-                                        RequestMethod.POST }, beanClass = Handler.class, beanMethod = "listenFindTechnologiesByCapabilityIds")
+                                        RequestMethod.POST }, beanClass = Handler.class, beanMethod = "listenFindTechnologiesByCapabilityIds"),
+                        @RouterOperation(path = CAPABILITY_TECHNOLOGIES_CASCADE_DELETE_PATH, method = {
+                                        RequestMethod.POST }, beanClass = Handler.class, beanMethod = "listenDeleteOrphanedTechnologiesForCapabilities")
         })
         public RouterFunction<ServerResponse> technologyRouterFunction(Handler handler) {
                 return route(POST(TECHNOLOGIES_PATH), handler::listenRegisterTechnology)
@@ -45,6 +49,8 @@ public class RouterRest {
                                 .andRoute(DELETE(CAPABILITY_TECHNOLOGIES_BY_ID_PATH),
                                                 handler::listenDeleteCapabilityTechnologies)
                                 .andRoute(POST(CAPABILITY_TECHNOLOGIES_BY_CAPABILITY_IDS_PATH),
-                                                handler::listenFindTechnologiesByCapabilityIds);
+                                                handler::listenFindTechnologiesByCapabilityIds)
+                                .andRoute(POST(CAPABILITY_TECHNOLOGIES_CASCADE_DELETE_PATH),
+                                                handler::listenDeleteOrphanedTechnologiesForCapabilities);
         }
 }
