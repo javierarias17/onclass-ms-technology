@@ -42,14 +42,18 @@ public class RouterRest {
                                         RequestMethod.POST }, beanClass = Handler.class, beanMethod = "listenDeleteOrphanedTechnologiesForCapabilities")
         })
         public RouterFunction<ServerResponse> technologyRouterFunction(Handler handler) {
+                //HU-01
                 return route(POST(TECHNOLOGIES_PATH), handler::listenRegisterTechnology)
+                                //HU-02
                                 .andRoute(POST(TECHNOLOGIES_EXISTENCE_CHECK_PATH),
                                                 handler::listenCheckTechnologiesExistence)
                                 .andRoute(POST(CAPABILITY_TECHNOLOGIES_PATH), handler::listenLinkCapabilityTechnologies)
                                 .andRoute(DELETE(CAPABILITY_TECHNOLOGIES_BY_ID_PATH),
                                                 handler::listenDeleteCapabilityTechnologies)
+                                //HU-03
                                 .andRoute(POST(CAPABILITY_TECHNOLOGIES_BY_CAPABILITY_IDS_PATH),
                                                 handler::listenFindTechnologiesByCapabilityIds)
+                                //HU-06
                                 .andRoute(POST(CAPABILITY_TECHNOLOGIES_CASCADE_DELETE_PATH),
                                                 handler::listenDeleteOrphanedTechnologiesForCapabilities);
         }

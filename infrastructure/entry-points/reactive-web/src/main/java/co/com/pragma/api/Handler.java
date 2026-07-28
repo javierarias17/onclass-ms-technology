@@ -38,7 +38,7 @@ public class Handler implements IHandlerDocs {
     @Override
     public Mono<ServerResponse> listenRegisterTechnology(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(TechnologyInDto.class)
-                .defaultIfEmpty(new TechnologyInDto(null, null))
+                .defaultIfEmpty(TechnologyInDto.builder().build())
                 .map(technologyDtoMapper::toTechnologyCreateCommand)
                 .flatMap(registerTechnologyUseCase::execute)
                 .map(technologyDtoMapper::toTechnologyOutDto)
@@ -48,7 +48,7 @@ public class Handler implements IHandlerDocs {
     @Override
     public Mono<ServerResponse> listenCheckTechnologiesExistence(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(TechnologyExistenceInDto.class)
-                .defaultIfEmpty(new TechnologyExistenceInDto(null))
+                .defaultIfEmpty(TechnologyExistenceInDto.builder().build())
                 .flatMap(dto -> checkTechnologiesExistenceUseCase.execute(dto.technologyIds()))
                 .map(TechnologyExistenceOutDto::new)
                 .flatMap(response -> ServerResponse.status(HttpStatus.OK).bodyValue(response));
@@ -57,7 +57,7 @@ public class Handler implements IHandlerDocs {
     @Override
     public Mono<ServerResponse> listenLinkCapabilityTechnologies(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(CapabilityTechnologyLinkInDto.class)
-                .defaultIfEmpty(new CapabilityTechnologyLinkInDto(null, null))
+                .defaultIfEmpty(CapabilityTechnologyLinkInDto.builder().build())
                 .map(capabilityTechnologyDtoMapper::toLinkCapabilityTechnologiesCommand)
                 .flatMap(linkCapabilityTechnologiesUseCase::execute)
                 .map(capabilityTechnologyDtoMapper::toCapabilityTechnologyLinkOutDto)
@@ -74,7 +74,7 @@ public class Handler implements IHandlerDocs {
     @Override
     public Mono<ServerResponse> listenFindTechnologiesByCapabilityIds(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(TechnologiesByCapabilityInDto.class)
-                .defaultIfEmpty(new TechnologiesByCapabilityInDto(null))
+                .defaultIfEmpty(TechnologiesByCapabilityInDto.builder().build())
                 .flatMap(dto -> findTechnologiesByCapabilityIdsUseCase.execute(dto.capabilityIds()))
                 .map(capabilityTechnologyDtoMapper::toTechnologiesByCapabilityOutDto)
                 .flatMap(response -> ServerResponse.status(HttpStatus.OK).bodyValue(response));
@@ -83,7 +83,7 @@ public class Handler implements IHandlerDocs {
     @Override
     public Mono<ServerResponse> listenDeleteOrphanedTechnologiesForCapabilities(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(CascadeDeleteTechnologiesInDto.class)
-                .defaultIfEmpty(new CascadeDeleteTechnologiesInDto(null))
+                .defaultIfEmpty(CascadeDeleteTechnologiesInDto.builder().build())
                 .flatMap(dto -> deleteOrphanedTechnologiesForCapabilitiesUseCase.execute(dto.capabilityIds()))
                 .then(ServerResponse.noContent().build());
     }

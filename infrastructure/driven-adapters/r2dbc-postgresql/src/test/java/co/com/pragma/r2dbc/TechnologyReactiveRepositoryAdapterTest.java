@@ -1,5 +1,8 @@
 package co.com.pragma.r2dbc;
 
+import co.com.pragma.model.technology.Technology;
+import co.com.pragma.model.technology.exceptions.TechnologyAlreadyExistsException;
+import co.com.pragma.r2dbc.entity.TechnologyEntity;
 import co.com.pragma.r2dbc.mapper.TechnologyEntityMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -7,7 +10,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.reactivecommons.utils.ObjectMapper;
+import org.springframework.dao.DuplicateKeyException;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.List;
@@ -16,6 +21,9 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class TechnologyReactiveRepositoryAdapterTest {
+
+    private static final String VALID_NAME = "Java";
+    private static final String VALID_DESCRIPTION = "Lenguaje de programacion";
 
     @Mock
     private TechnologyReactiveRepository repository;
@@ -31,6 +39,26 @@ class TechnologyReactiveRepositoryAdapterTest {
     @BeforeEach
     void setUp() {
         adapter = new TechnologyReactiveRepositoryAdapter(repository, mapper, technologyEntityMapper);
+    }
+
+    @Test
+    void Expect_TechnologyAlreadyExistsException_When_ConcurrentInsertViolatesUniqueIndex() {
+        // Arrange: dos requests concurrentes con el mismo nombre pasan el chequeo previo
+        // (existsByName) y ambas intentan el INSERT; la segunda choca contra el indice
+        // unico en Postgres.
+        Technology technology = Technology.builder()
+                .name(VALID_NAME).description(VALID_DESCRIPTION).build();
+        TechnologyEntity entity = TechnologyEntity.builder()
+                .name(VALID_NAME).description(VALID_DESCRIPTION).build();
+
+        when(technologyEntityMapper.toEntity(technology)).thenReturn(entity);
+        when(repository.save(entity)).thenReturn(Mono.error(
+                new DuplicateKeyException("duplicate key value violates unique constraint")));
+
+        // Act & Assert
+        StepVerifier.create(adapter.save(technology))
+                .expectError(TechnologyAlreadyExistsException.class)
+                .verify();
     }
 
     @Test

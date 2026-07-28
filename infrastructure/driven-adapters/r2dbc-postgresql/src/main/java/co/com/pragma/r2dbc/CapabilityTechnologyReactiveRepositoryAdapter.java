@@ -38,21 +38,20 @@ public class CapabilityTechnologyReactiveRepositoryAdapter extends
     @Transactional
     public Mono<List<CapabilityTechnology>> saveAll(LinkCapabilityTechnologies linkCapabilityTechnologies) {
         Long capabilityId = linkCapabilityTechnologies.getCapabilityId().value();
-        return Flux.fromIterable(linkCapabilityTechnologies.getTechnologyIds().value())
+        List<Long> technologyIds = linkCapabilityTechnologies.getTechnologyIds().value();
+        return Flux.fromIterable(technologyIds)
                 .flatMap(technologyId -> repository.insertIgnoringConflict(capabilityId, technologyId)
                         .map(this::toEntity)
                         .defaultIfEmpty(CapabilityTechnology.builder()
                                 .capabilityId(capabilityId)
                                 .technologyId(technologyId)
-                                .build()))
-                .collectList()
-                // la tecnologia pudo haberse borrado fisicamente (FK) entre el chequeo de
-                // existencia previo y este INSERT; se mapea al mismo error de negocio que
-                // ya usa el rechazo de findMissingIds, en vez de dejar escapar el error tecnico crudo
-                .onErrorMap(DataIntegrityViolationException.class, ex -> new TechnologiesNotFoundException(
-                        FunctionalMessageConstants.BUSINESS_VALIDATION_FAILED,
-                        Map.of(FieldConstants.TECHNOLOGY_IDS, String.format(FunctionalMessageConstants.TECHNOLOGIES_NOT_FOUND,
-                                technologyIds))));
+                                .build())
+                        // la tecnologia pudo haberse borrado fisicamente (FK) entre el chequeo de existencia previo y este INSERT;
+                        .onErrorMap(DataIntegrityViolationException.class, ex -> new TechnologiesNotFoundException(
+                                FunctionalMessageConstants.BUSINESS_VALIDATION_FAILED,
+                                Map.of(FieldConstants.TECHNOLOGY_IDS, String.format(
+                                        FunctionalMessageConstants.TECHNOLOGIES_NOT_FOUND, List.of(technologyId))))))
+                .collectList();
     }
 
     @Override
